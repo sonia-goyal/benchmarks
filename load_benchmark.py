@@ -24,7 +24,7 @@ all_files = glob.glob(os.path.join(path, "*.csv"))
 
 # Benchmarking data for pandas
 row_list = []
-for n in [3, 5, 10, 15, 20]:
+for n in [3, 5, 10, 15, 20, 25, 30, 33]:
     # In my case each csv file is approximately 630 MB so each file s 0.615 GB
     # Dividing by 0.615 will give the number of files required to make n GB
     n = round(n / 0.615)
@@ -56,7 +56,7 @@ for n in [3, 5, 10, 15, 20]:
 # Benchmarking data for Spark
 row_list2 = []
 spark = SparkSession.builder.appName('SparkByExamples.com').getOrCreate()
-for n in [3, 5, 10, 15, 20]:
+for n in [3, 5, 10, 15, 20, 25, 30, 33]:
     # In my case each csv file is approximately 630 MB so each file s 0.615 GB
     # Dividing by 0.615 will give the number of files required to make n GB
     n = round(n / 0.615)
@@ -86,11 +86,12 @@ for n in [3, 5, 10, 15, 20]:
 
 
 # Load the stats in a pandas dataframe for easy usage
+pandas_stats = pd.DataFrame(row_list, columns=['data_size', 'memory_used', 'exec_time', 'number_of_rows'])
+print(pandas_stats.head())
+
 spark_stats = pd.DataFrame(row_list2, columns=['data_size', 'memory_used', 'exec_time', 'number_of_rows'])
 print(spark_stats.head())
 
-pandas_stats = pd.DataFrame(row_list, columns=['data_size', 'memory_used', 'exec_time', 'number_of_rows'])
-print(pandas_stats.head())
 
 # Plot the comparison of data gathered for all the benchmarks
 plt.plot(pandas_stats['data_size'], pandas_stats['exec_time'], color='red', label='pandas')
